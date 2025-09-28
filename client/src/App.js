@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
 function App() {
   const [users, setUsers] = useState([]);
-  const [form, setForm] = useState({ name: '', email: '', phone: '' });
+  const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const [editingId, setEditingId] = useState(null);
-
+  console.log(users);
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -21,7 +21,8 @@ function App() {
     }
   };
 
-  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,42 +33,85 @@ function App() {
       } else {
         await axios.post(`${API}/users`, form);
       }
-      setForm({ name: '', email: '', phone: '' });
+      setForm({ name: "", email: "", phone: "" });
       fetchUsers();
     } catch (err) {
-      alert(err.response?.data?.error || 'Error');
+      alert(err.response?.data?.error || "Error");
     }
   };
 
   const handleEdit = (user) => {
     setEditingId(user._id);
-    setForm({ name: user.name, email: user.email, phone: user.phone || '' });
+    setForm({ name: user.name, email: user.email, phone: user.phone || "" });
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Delete user?')) return;
+    if (!window.confirm("Delete user?")) return;
     await axios.delete(`${API}/users/${id}`);
     fetchUsers();
   };
 
   return (
-    <div style={{ maxWidth: 800, margin: '20px auto', fontFamily: 'Arial, sans-serif' }}>
+    <div
+      style={{
+        maxWidth: 800,
+        margin: "20px auto",
+        fontFamily: "Arial, sans-serif",
+      }}
+    >
       <h1>MERN CRUD</h1>
 
       <form onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
-        <input name="name" placeholder="Name" value={form.name} onChange={handleChange} required />
-        <input name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-        <input name="phone" placeholder="Phone" value={form.phone} onChange={handleChange} />
-        <button type="submit">{editingId ? 'Update' : 'Add'}</button>
-        {editingId && <button type="button" onClick={() => { setEditingId(null); setForm({name:'',email:'',phone:''}); }}>Cancel</button>}
+        <input
+          name="name"
+          placeholder="Name"
+          value={form.name}
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="phone"
+          placeholder="Phone"
+          value={form.phone}
+          onChange={handleChange}
+        />
+        <button type="submit">{editingId ? "Update" : "Add"}</button>
+        {editingId && (
+          <button
+            type="button"
+            onClick={() => {
+              setEditingId(null);
+              setForm({ name: "", email: "", phone: "" });
+            }}
+          >
+            Cancel
+          </button>
+        )}
       </form>
 
-      <table border="1" cellPadding="8" cellSpacing="0" style={{ width: '100%' }}>
+      <table
+        border="1"
+        cellPadding="8"
+        cellSpacing="0"
+        style={{ width: "100%" }}
+      >
         <thead>
-          <tr><th>Name</th><th>Email</th><th>Phone</th><th>Actions</th></tr>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Actions</th>
+          </tr>
         </thead>
         <tbody>
-          {users.map(u => (
+          {users.map((u) => (
             <tr key={u._id}>
               <td>{u.name}</td>
               <td>{u.email}</td>
