@@ -5,7 +5,7 @@ const API = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
 function App() {
   const [users, setUsers] = useState([]);
-  const [form, setForm] = useState({ name: "", email: "", phone: "" });
+  const [form, setForm] = useState({ userName: "", email: "", phone: "" });
   const [editingId, setEditingId] = useState(null);
   console.log(users);
   useEffect(() => {
